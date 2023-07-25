@@ -6,6 +6,7 @@ import streamlit as st
 
 from .fixtures import query_mesh_projects_and_models
 
+# todo - allow user to set these in app
 DBT_API_TOKEN = os.getenv("DBT_API_TOKEN")
 DBT_METADATA_URL = os.getenv("DBT_METADATA_URL") or "https://metadata.cloud.getdbt.com/beta/graphql"
 DBT_ENV_ID = int(os.getenv("DBT_ENV_ID"))

@@ -9,7 +9,7 @@ class meshProject(BaseModel):
     defaultEnvironmentId: int
     isProducer: bool
     isConsumer: bool
-    dependentProjects: List[meshProject]
+    dependentProjects: List[meshProject] = []
 
 class publicModelNode(BaseModel):
     accountId: int
