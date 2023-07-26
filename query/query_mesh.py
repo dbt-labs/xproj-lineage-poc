@@ -1,11 +1,9 @@
-import os
 import requests
 from schemas.mesh import DiscoResponse
+from schemas.model_details import ModelDiscoResponse
 import streamlit as st
-from utils.set_variables import set_variables
 
-
-from .fixtures import query_mesh_projects_and_models
+from .fixtures import query_mesh_projects_and_models, query_model_details
 
 @st.cache_resource
 def get_mesh_projects_and_models(
@@ -23,5 +21,21 @@ def get_mesh_projects_and_models(
     }
 
     response = requests.post(st.session_state.dbt_metadata_url, headers=headers, json=json_data).json()
-    print(response)
     return DiscoResponse.parse_obj(response["data"])
+
+
+def get_public_model_details(unique_id: str, environment_id: int, api_token: str) -> ModelDiscoResponse:
+    
+    headers = {
+        "content-type": "application/json",
+        "Authorization": f"Bearer {api_token}",
+    }
+
+    json_data = {
+        "query": query_model_details,
+        "variables": {"environmentId": environment_id, "uniqueIds": [unique_id]},
+    }
+
+    response = requests.post(st.session_state.dbt_metadata_url, headers=headers, json=json_data).json()
+    print(environment_id)
+    return ModelDiscoResponse.parse_obj(response["data"])
