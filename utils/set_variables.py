@@ -10,7 +10,6 @@ def set_variables():
     if not DBT_ACCOUNT_ID:
         DBT_ACCOUNT_ID = st.sidebar.text_input("dbt Account ID")
     
-    DBT_ACCOUNT_ID = int(DBT_ACCOUNT_ID)
     DBT_METADATA_URL = st.sidebar.text_input("Metadata URL", "https://metadata.cloud.getdbt.com/beta/graphql")
     DBT_CLOUD_URL = st.sidebar.text_input("dbt Cloud URL", "https://cloud.getdbt.com")
 
@@ -19,7 +18,7 @@ def set_variables():
         {"key": "dbt_api_token", "value": DBT_API_TOKEN},
         {"key": "dbt_metadata_url", "value": DBT_METADATA_URL},
         {"key": "dbt_cloud_url", "value": DBT_CLOUD_URL},
-        {"key": "dbt_account_id", "value": DBT_ACCOUNT_ID},
+        {"key": "dbt_account_id", "value": int(DBT_ACCOUNT_ID) if DBT_ACCOUNT_ID else None},
     ]:
         st.session_state[variable["key"]] = variable["value"]
     
@@ -28,5 +27,5 @@ def set_variables():
     st.session_state.dbt_metadata_url and 
     st.session_state.dbt_account_id
     ):
-        st.warning("Please set your dbt API Token, dbt Account ID, and dbt Metadata URL in the sidebar.")
+        st.warning("Please set all values shown in the sidebar.")
         st.stop()
