@@ -3,13 +3,8 @@ import streamlit as st
 
 def set_variables():
     # todo - allow user to set these in app
-    DBT_API_TOKEN = os.getenv("DBT_API_TOKEN")
-    DBT_ACCOUNT_ID = os.getenv("DBT_ACCOUNT_ID")
-    if not DBT_API_TOKEN:
-        DBT_API_TOKEN = st.sidebar.text_input("dbt API Token", type="password")
-    if not DBT_ACCOUNT_ID:
-        DBT_ACCOUNT_ID = st.sidebar.text_input("dbt Account ID")
-    
+    DBT_API_TOKEN = st.sidebar.text_input("dbt API Token", type="password")
+    DBT_ACCOUNT_ID = st.sidebar.text_input("dbt Account ID", "1")
     DBT_METADATA_URL = st.sidebar.text_input("Metadata URL", "https://metadata.cloud.getdbt.com/beta/graphql")
     DBT_CLOUD_URL = st.sidebar.text_input("dbt Cloud URL", "https://cloud.getdbt.com")
 
@@ -18,7 +13,7 @@ def set_variables():
         {"key": "dbt_api_token", "value": DBT_API_TOKEN},
         {"key": "dbt_metadata_url", "value": DBT_METADATA_URL},
         {"key": "dbt_cloud_url", "value": DBT_CLOUD_URL},
-        {"key": "dbt_account_id", "value": int(DBT_ACCOUNT_ID) if DBT_ACCOUNT_ID else None},
+        {"key": "dbt_account_id", "value": int(DBT_ACCOUNT_ID)},
     ]:
         st.session_state[variable["key"]] = variable["value"]
     

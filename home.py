@@ -43,15 +43,16 @@ if selected_project_name:
     # look at lineage for a model
     st.subheader("Model details")
     selected_model_name = st.selectbox("Select a public model to see lineage", [model.name for model in mesh_data.account.publicModels if model.dbtProjectName == selected_project_name])
-    selected_model = [model for model in mesh_data.account.publicModels if model.name == selected_model_name][0]
-    if st.button("See full model details in dbt Explorer"):
-        webbrowser.open_new_tab(URLS["explore"].format(**{
-            'dbt_cloud_url': st.session_state.dbt_cloud_url,
-            'account_id': st.session_state.dbt_account_id,
-            'project_id': selected_project.projectId,
-            'page': "/details/" + selected_model.uniqueId
-        }))
-    # print(selected_model)
-    model_data = get_public_model_details(selected_model.uniqueId, selected_model.environmentId, st.session_state.dbt_api_token)
-    st.subheader(f"Cross project dependencies for `{selected_model.uniqueId}`")
-    get_model_xproj_dag(model_data, mesh_data)
+    if selected_model_name:
+        selected_model = [model for model in mesh_data.account.publicModels if model.name == selected_model_name][0]
+        if st.button("See full model details in dbt Explorer"):
+            webbrowser.open_new_tab(URLS["explore"].format(**{
+                'dbt_cloud_url': st.session_state.dbt_cloud_url,
+                'account_id': st.session_state.dbt_account_id,
+                'project_id': selected_project.projectId,
+                'page': "/details/" + selected_model.uniqueId
+            }))
+        # print(selected_model)
+        model_data = get_public_model_details(selected_model.uniqueId, selected_model.environmentId, st.session_state.dbt_api_token)
+        st.subheader(f"Cross project dependencies for `{selected_model.uniqueId}`")
+        get_model_xproj_dag(model_data, mesh_data)
