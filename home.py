@@ -53,4 +53,5 @@ if selected_project_name:
         }))
     # print(selected_model)
     model_data = get_public_model_details(selected_model.uniqueId, selected_model.environmentId, st.session_state.dbt_api_token)
+    st.subheader(f"Cross project dependencies for `{selected_model.uniqueId}`")
     get_model_xproj_dag(model_data, mesh_data)
