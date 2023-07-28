@@ -2,3 +2,4 @@ streamlit
 streamlit_agraph
 pydantic
 black
+plotly

@@ -1,6 +1,6 @@
 import requests
 from schemas.mesh import DiscoResponse
-from schemas.model_details import ModelDiscoResponse
+from schemas.public_model_details import ModelDiscoResponse
 import streamlit as st
 
 from .fixtures import query_mesh_projects_and_models, query_model_details

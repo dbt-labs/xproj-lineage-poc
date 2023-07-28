@@ -1,5 +1,5 @@
 from schemas.mesh import DiscoResponse
-from schemas.model_details import ExternalModelNode, ModelDiscoResponse
+from schemas.public_model_details import ExternalModelNode, ModelDiscoResponse
 from streamlit_agraph import agraph, Node, Edge, Config
 
 def get_project_colors(mesh_data: DiscoResponse):
