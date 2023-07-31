@@ -13,8 +13,8 @@ class DiscoRelatedTestNode(BaseModel):
 
 class DiscoPageInfo(BaseModel):
     hasNextPage: bool
-    startCursor: str
-    endCursor: str
+    startCursor: Union[str, None] = None
+    endCursor: Union[str, None] = None
 
 class DiscoModelNode(BaseModel):
     name: str

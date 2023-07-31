@@ -60,24 +60,41 @@ def get_violations_by_rule_set(violations: List[EvaluatorViolation]):
     df.columns = ["Rule Category", "Total Count"]
     return df
 
+def get_violations_by_model(violations: List[EvaluatorViolation]):
+    violation_map = {}
+    for violation in violations:
+        if violation.model not in violation_map.keys():
+            violation_map[violation.model] = 1
+        else:
+            violation_map[violation.model] += 1
+    df = pd.DataFrame.from_dict(violation_map, orient="index").reset_index()
+    df.columns = ["Model Name", "Total Count"]
+    return df
+
 severity_map = get_violations_by_severity(all_violations)
 rule_category_map = get_violations_by_rule_set(all_violations)
+model_map = get_violations_by_model(all_violations)
 severity_plot = px.bar(severity_map, y="Severity", x="Total Count", orientation='h', color="Severity")
 rule_set_plot = px.bar(rule_category_map, y="Rule Category", x="Total Count", orientation='h', color="Rule Category")
+model_plot = px.bar(model_map, y="Model Name", x="Total Count", orientation='h', color="Model Name")
 grouper = st.selectbox(
         "View Violations by",
-        ("Severity", "Rule Category")
+        ("Severity", "Rule Category", "Model Name")
     )
 if grouper == "Severity":
     st.subheader("Violations by Severity")
     st.plotly_chart(severity_plot)
+elif grouper == "Model Name":
+    st.subheader("Violations by Model Name")
+    st.plotly_chart(model_plot)
 elif grouper == "Rule Category":
     st.subheader("Violations by Rule Category")
     st.plotly_chart(rule_set_plot)
-st.subheader("Violations by Resource")
 
 ## This is the section to look at a single resource and evaluate it
-unique_id = st.selectbox("Select a resource", unique_ids)
+st.subheader("Violations by Resource")
+violating_resources = set([violation.unique_id for violation in all_violations])
+unique_id = st.selectbox("Select a resource with a violation", violating_resources)
 
 resource_violations = [violation for violation in all_violations if violation.unique_id == unique_id]
 
