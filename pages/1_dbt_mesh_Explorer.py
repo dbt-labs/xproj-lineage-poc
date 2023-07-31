@@ -23,22 +23,22 @@ if selected_project_name:
     # add deep links to cloud
     col1, col2 = st.columns(2)
     with col1:
-        if st.button("Open this project in dbt Explorer"):
-            url = URLS["explore"].format(**{
-                'dbt_cloud_url': st.session_state.dbt_cloud_url,
-                'account_id': st.session_state.dbt_account_id,
-                'project_id': selected_project.projectId,
-                'page': ''
-            })
-            print("opening: " + url)
-            webbrowser.open_new_tab(url)
+        url = URLS["explore"].format(**{
+            'dbt_cloud_url': st.session_state.dbt_cloud_url,
+            'account_id': st.session_state.dbt_account_id,
+            'project_id': selected_project.projectId,
+            'page': ''
+        })
+        link=f"[Open this project in dbt Explorer]({url})"
+        st.markdown(link, unsafe_allow_html=True)
     with col2:
-        if st.button("Open this project in dbt Cloud IDE"):
-            webbrowser.open_new_tab(URLS["develop"].format(**{
+        url = URLS["develop"].format(**{
                 'dbt_cloud_url': st.session_state.dbt_cloud_url,
                 'account_id': st.session_state.dbt_account_id,
                 'project_id': selected_project.projectId
-            }))
+            })
+        link=f"[Open this project in dbt Cloud IDE]({url})"
+        st.markdown(link, unsafe_allow_html=True)
     st.subheader(f"Available Public Models in `{selected_project_name}`")
     st.dataframe(get_public_models_table(mesh_data, selected_project_name), use_container_width=True)
 
@@ -47,13 +47,14 @@ if selected_project_name:
     selected_model_name = st.selectbox("Select a public model to see lineage", [model.name for model in mesh_data.account.publicModels if model.dbtProjectName == selected_project_name])
     if selected_model_name:
         selected_model = [model for model in mesh_data.account.publicModels if model.name == selected_model_name][0]
-        if st.button("See full model details in dbt Explorer"):
-            webbrowser.open_new_tab(URLS["explore"].format(**{
+        url = URLS["explore"].format(**{
                 'dbt_cloud_url': st.session_state.dbt_cloud_url,
                 'account_id': st.session_state.dbt_account_id,
                 'project_id': selected_project.projectId,
                 'page': "/details/" + selected_model.uniqueId
-            }))
+        })
+        link=f"[See full model details in dbt Explorer]({url})"
+        st.markdown(link, unsafe_allow_html=True)
         # print(selected_model)
         model_data = get_public_model_details(selected_model.uniqueId, selected_model.environmentId, st.session_state.dbt_api_token)
         st.subheader(f"Cross project dependencies for `{selected_model.uniqueId}`")
