@@ -24,12 +24,14 @@ if selected_project_name:
     col1, col2 = st.columns(2)
     with col1:
         if st.button("Open this project in dbt Explorer"):
-            webbrowser.open_new_tab(URLS["explore"].format(**{
+            url = URLS["explore"].format(**{
                 'dbt_cloud_url': st.session_state.dbt_cloud_url,
                 'account_id': st.session_state.dbt_account_id,
                 'project_id': selected_project.projectId,
-                'page': None
-            }))
+                'page': ''
+            })
+            print("opening: " + url)
+            webbrowser.open_new_tab(url)
     with col2:
         if st.button("Open this project in dbt Cloud IDE"):
             webbrowser.open_new_tab(URLS["develop"].format(**{
