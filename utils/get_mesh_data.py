@@ -8,13 +8,13 @@ def get_public_models_table(data: DiscoResponse, project_name: str = None):
         dict(
             {
                 k: public_model.model_dump(by_alias=True).get(k)
-                for k in ["name", "dbtProjectName", "database", "schema"]
+                for k in ["name", "dbtCoreProject", "database", "schema"]
             }
         )
         for public_model in data.account.publicModels
     ]
     table_data = pd.DataFrame.from_records(table_data)
-    table_data = table_data[table_data["dbtProjectName"] == project_name]
+    table_data = table_data[table_data["dbtCoreProject"] == project_name]
     table_data.columns = ["Model Name", "Project Name", "Database", "Schema"]
     return table_data
 

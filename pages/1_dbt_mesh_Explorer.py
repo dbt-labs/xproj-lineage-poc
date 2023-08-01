@@ -44,7 +44,7 @@ if selected_project_name:
 
     # look at lineage for a model
     st.subheader("Model details")
-    selected_model_name = st.selectbox("Select a public model to see lineage", [model.name for model in mesh_data.account.publicModels if model.dbtProjectName == selected_project_name])
+    selected_model_name = st.selectbox("Select a public model to see lineage", [model.name for model in mesh_data.account.publicModels if model.dbtCoreProject == selected_project_name])
     if selected_model_name:
         selected_model = [model for model in mesh_data.account.publicModels if model.name == selected_model_name][0]
         url = URLS["explore"].format(**{
