@@ -44,7 +44,7 @@ class DiscoModelDefinitionResponse(BaseModel):
     pageInfo: DiscoPageInfo
 
 class DiscoSourceDefinitionResponse(BaseModel):
-    edges: List[DiscoNode]
+    edges: List[DiscoNode] = []
     totalCount: int
     pageInfo: DiscoPageInfo
 
