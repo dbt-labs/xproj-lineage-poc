@@ -14,8 +14,7 @@ class meshProject(BaseModel):
 class publicModelNode(BaseModel):
     accountId: int
     database: str
-    dbtProject: str
-    dbtProjectName: str
+    dbtCoreProject: str
     environmentId: int
     identifier: str
     isDefaultEnv: bool

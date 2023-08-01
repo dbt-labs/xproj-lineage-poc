@@ -19,8 +19,7 @@ query Mesh($accountId: Int!){
     }
     publicModels {
       uniqueId
-      dbtProject
-      dbtProjectName
+      dbtCoreProject
       projectId
       environmentId
       accountId

@@ -36,6 +36,8 @@ def query_all_resources(query: str, api_token: str, metadata_url: str, env_id: i
     single_call_response = query_metadata_cursor(input=query, api_token=api_token, metadata_url=metadata_url, env_id=env_id)
     all_calls_response = copy.deepcopy(single_call_response)
 
+    print(single_call_response)
+
     while single_call_response["data"]["environment"]["definition"][resource_type]["pageInfo"]["hasNextPage"]:
         after_cursor = single_call_response["data"]["environment"]["definition"][resource_type]["pageInfo"]["endCursor"]
         single_call_response = query_metadata_cursor(input=input, api_token=api_token, metadata_url=metadata_url, env_id=env_id, after_cursor=after_cursor)
