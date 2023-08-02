@@ -9,7 +9,7 @@ class DiscoRelatedDAGNode(BaseModel):
 class DiscoRelatedTestNode(BaseModel):
     name: str
     uniqueId: str
-    columnName: str
+    columnName: Union[str, None] = ""
 
 class DiscoPageInfo(BaseModel):
     hasNextPage: bool

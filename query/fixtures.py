@@ -89,8 +89,19 @@ query all_models($environmentId: Int!, $first: Int!, $after: String) {
               uniqueId
               name
             }
+            children {
+              uniqueId
+              name
+            }
+            tests {
+              uniqueId
+              name
+              columnName
+            }
             name
             uniqueId
+            description
+            materializedType
           }
         }
         totalCount

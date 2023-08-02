@@ -2,7 +2,7 @@ from typing import Dict, List
 from eval.modeling_rules import ModelingRuleSet
 from eval.performance_rules import PerformanceRuleSet
 from eval.tests_and_docs_rules import TestingAndDocumentationRuleSet
-from query.query_eval import get_all_unique_ids, query_single_resource
+from query.query_eval import get_all_models, get_all_resource_unique_ids, get_all_sources, query_single_resource
 from schemas.eval_model_and_source import EvalDiscoResponse
 from schemas.eval_utils import EvaluatorViolation
 import plotly.express as px
@@ -12,29 +12,21 @@ from utils.set_variables import check_variables
 
 check_variables()
 
-unique_ids = get_all_unique_ids()
+model_data = get_all_models()
+source_data = get_all_sources()
+models = [node.node for node in model_data.environment.definition.models.edges]
+sources = [node.node for node in source_data.environment.definition.sources.edges]
+all_resources = models + sources
 
 st.header("`dbt_project_evaluator`")
 
-def get_all_resources(unique_ids: Dict[str, EvalDiscoResponse]):
-    all_resources = {}
-    for unique_id in unique_ids:
-        selected_resource_type = unique_id.split(".")[0]
-        resp = query_single_resource(resource_type = selected_resource_type, unique_id=unique_id)
-        all_resources[unique_id] = resp
-    return all_resources
-
 def get_all_violations(_resource_responses):
     all_violations = []
-    for unique_id, resp in _resource_responses.items():
-        resource_defintion = resp.environment.definition
-        selected_resource_type = unique_id.split(".")[0]
-        resource = getattr(resource_defintion, selected_resource_type + "s").edges[0].node
+    for resource in _resource_responses:
         for rulesets in [ModelingRuleSet, TestingAndDocumentationRuleSet, PerformanceRuleSet]:
             all_violations.extend(rulesets().process(resource))
     return all_violations
 
-all_resources = get_all_resources(unique_ids)
 all_violations = get_all_violations(all_resources)
 st.subheader(f"Total Violations: {len(all_violations)}")
 

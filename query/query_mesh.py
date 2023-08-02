@@ -21,6 +21,9 @@ def get_mesh_projects_and_models(
     }
 
     response = requests.post(st.session_state.dbt_metadata_url, headers=headers, json=json_data).json()
+    if response.get("errors"):
+        st.warning("Error querying the Discovery API: " + [error.get("message") for error in response.get("errors")][0])
+        st.stop()
     return DiscoResponse.parse_obj(response["data"])
 
 
@@ -37,5 +40,7 @@ def get_public_model_details(unique_id: str, environment_id: int, api_token: str
     }
 
     response = requests.post(st.session_state.dbt_metadata_url, headers=headers, json=json_data).json()
-    print(environment_id)
+    if response.get("errors"):
+        st.warning("Error querying the Discovery API: " + [error.get("message") for error in response.get("errors")][0])
+        st.stop()
     return ModelDiscoResponse.parse_obj(response["data"])
