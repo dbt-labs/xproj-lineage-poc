@@ -1,6 +1,6 @@
 import streamlit as st
 from utils.fixtures import URLS
-from query.query_mesh import get_mesh_projects_and_models, get_public_model_details
+from query.query_mesh import get_mesh_projects_and_models
 from utils.get_mesh_model_data import get_model_xproj_dag
 from utils.get_mesh_data import get_public_models_table, get_xproj_dag
 from utils.set_variables import check_variables
@@ -56,6 +56,5 @@ if selected_project_name:
         link=f"[See full model details in dbt Explorer]({url})"
         st.markdown(link, unsafe_allow_html=True)
         # print(selected_model)
-        model_data = get_public_model_details(selected_model.uniqueId, selected_model.environmentId, st.session_state.dbt_api_token)
         st.subheader(f"Cross project dependencies for `{selected_model.uniqueId}`")
-        get_model_xproj_dag(model_data, mesh_data)
+        get_model_xproj_dag(selected_model, mesh_data)

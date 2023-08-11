@@ -1,4 +1,4 @@
-from schemas.mesh import DiscoResponse
+from schemas.mesh import DiscoResponse, publicAncestor, publicModelNode
 from schemas.public_model_details import ExternalModelNode, ModelDiscoResponse
 from streamlit_agraph import agraph, Node, Edge, Config
 
@@ -10,24 +10,23 @@ def get_project_colors(mesh_data: DiscoResponse):
         color_assignment[item] = color_list[i % len(color_list)]
     return color_assignment
 
-def get_model_xproj_dag(model_data: ModelDiscoResponse, mesh_data: DiscoResponse):
+def get_model_xproj_dag(model_data: publicModelNode, mesh_data: DiscoResponse):
     colors = get_project_colors(mesh_data)
     nodes = []
     edges = []
     
-    main_model = model_data.environment.definition.models.edges[0].node
     # add model
     nodes.append(Node(
-            id=main_model.uniqueId,
-            label=main_model.packageName + "." + main_model.name,
+            id=model_data.uniqueId,
+            label=model_data.packageName + "." + model_data.name,
             shape="hexagon",
-            color=colors[main_model.packageName]
+            color=colors[model_data.packageName]
         )
     )
 
     # add model parents
-    for parent in main_model.parents:
-        if not isinstance(parent, ExternalModelNode):
+    for parent in model_data.publicAncestors:
+        if not isinstance(parent, publicAncestor):
             continue
         nodes.append(
             Node(
@@ -38,32 +37,31 @@ def get_model_xproj_dag(model_data: ModelDiscoResponse, mesh_data: DiscoResponse
             )
         )
         edges.append(Edge(
-                target=main_model.uniqueId,
+                target=model_data.uniqueId,
                 source=parent.uniqueId
             )
         )
 
-    # add model children
-    for child in main_model.children:
-        if not isinstance(child, ExternalModelNode):
-            continue
+    # add model project-level children
+    for child in model_data.children:
         nodes.append(
             Node(
-                id=child.uniqueId,
-                label=child.dbtProjectName + "." + child.name,
-                shape="hexagon",
-                color=child.dbtProjectName
+                id=child.dbtCoreProject,
+                label=f"Used by {child.dependentModelsCount} model(s) in project {child.dbtCoreProject}",
+                shape="square",
+                color=colors[child.dbtCoreProject]
             )
         )
         edges.append(Edge(
-                source=main_model.uniqueId,
-                target=child.uniqueId
+                source=model_data.uniqueId,
+                target=child.dbtCoreProject
             )
         )
 
     # build config
     config = Config(width=750,
                 height=300,
+                nodeSpacing=400,
                 directed=True, 
                 physics=False, 
                 hierarchical=True,

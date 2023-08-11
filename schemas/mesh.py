@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Optional, Union
+from typing import List, Optional
 from pydantic import BaseModel, Field
 
 class meshProject(BaseModel):
@@ -10,6 +10,17 @@ class meshProject(BaseModel):
     isProducer: bool
     isConsumer: bool
     dependentProjects: List[meshProject] = []
+
+class publicModelChildProject(BaseModel):
+    dbtCoreProject: str
+    projectId: int 
+    defaultEnvironmentId: int
+    dependentModelsCount: int
+
+class publicAncestor(BaseModel):
+    name: str
+    dbtCoreProject: str 
+    uniqueId: str
 
 class publicModelNode(BaseModel):
     accountId: int
@@ -27,6 +38,8 @@ class publicModelNode(BaseModel):
     runGeneratedAt: str
     schema_: str = Field("", alias="schema")
     uniqueId: str
+    children: List[publicModelChildProject] = []
+    publicAncestors: List[publicAncestor] = []
     
 class dbtAccountMesh(BaseModel):
     meshProjects: List[meshProject]
