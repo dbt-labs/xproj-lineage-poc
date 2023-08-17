@@ -55,6 +55,5 @@ if selected_project_name:
         })
         link=f"[See full model details in dbt Explorer]({url})"
         st.markdown(link, unsafe_allow_html=True)
-        # print(selected_model)
         st.subheader(f"Cross project dependencies for `{selected_model.uniqueId}`")
         get_model_xproj_dag(selected_model, mesh_data)

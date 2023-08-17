@@ -1,5 +1,5 @@
 import requests
-from schemas.eval_model_and_source import DiscoEnvironmentResponse, EvalDiscoResponse
+from schemas.eval_model_and_source import EvalDiscoResponse
 import streamlit as st
 import logging
 import copy
@@ -26,7 +26,7 @@ def query_metadata_cursor(input: str, api_token: str, metadata_url: str, env_id:
     logging.info(f"Querying API with after_cursor: {after_cursor}")
     response = requests.post(metadata_url, headers=headers, json=json_data).json()
     if response.get("errors"):
-        st.write("Error querying the Discovery API: ", response.get("errors").get("message"))
+        st.write("Error querying the Discovery API: ", response.get("errors")[0].get("message"))
         st.stop()
 
     return response
@@ -38,7 +38,7 @@ def query_all_resources(query: str, api_token: str, metadata_url: str, env_id: i
     single_call_response = query_metadata_cursor(input=query, api_token=api_token, metadata_url=metadata_url, env_id=env_id)
     all_calls_response = copy.deepcopy(single_call_response)
     if single_call_response.get("errors"):
-        st.warning("Error querying the Discovery API: ", single_call_response.get("errors").get("message"))
+        st.warning("Error querying the Discovery API: ", single_call_response.get("errors")[0].get("message"))
         st.stop()
 
     while single_call_response["data"]["environment"]["definition"][resource_type]["pageInfo"]["hasNextPage"]:

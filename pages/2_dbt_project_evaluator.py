@@ -1,9 +1,8 @@
-from typing import Dict, List
+from typing import List
 from eval.modeling_rules import ModelingRuleSet
 from eval.performance_rules import PerformanceRuleSet
 from eval.tests_and_docs_rules import TestingAndDocumentationRuleSet
-from query.query_eval import get_all_models, get_all_resource_unique_ids, get_all_sources, query_single_resource
-from schemas.eval_model_and_source import EvalDiscoResponse
+from query.query_eval import get_all_models, get_all_sources 
 from schemas.eval_utils import EvaluatorViolation
 import plotly.express as px
 import pandas as pd

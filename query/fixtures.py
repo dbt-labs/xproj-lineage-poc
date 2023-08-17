@@ -1,5 +1,5 @@
 query_mesh_projects_and_models = """
-query Mesh($accountId: Int!){
+query Mesh($accountId: BigInt!){
   account(id: $accountId) {
     meshProjects {
       dbtCoreProject
@@ -54,7 +54,7 @@ query Mesh($accountId: Int!){
 """
 
 QUERY_ALL_MODELS = """
-query all_models($environmentId: Int!, $first: Int!, $after: String) {
+query all_models($environmentId: BigInt!, $first: Int!, $after: String) {
   environment(id: $environmentId) {
     definition {
       models(first: $first, after: $after) {
@@ -92,7 +92,7 @@ query all_models($environmentId: Int!, $first: Int!, $after: String) {
 """
 
 QUERY_SINGLE_MODEL = """
-query single_model($environmentId: Int!, $uniqueIds: [String!]) {
+query single_model($environmentId: BigInt!, $uniqueIds: [String!]) {
   environment(id: $environmentId) {
     definition {
       models(first: 1, filter: { uniqueIds: $uniqueIds }) {
@@ -130,7 +130,7 @@ query single_model($environmentId: Int!, $uniqueIds: [String!]) {
 """
 
 QUERY_ALL_SOURCES = """
-query Environment($environmentId: Int!, $first: Int!, $after: String) {
+query Environment($environmentId: BigInt!, $first: Int!, $after: String) {
   environment(id: $environmentId) {
     definition {
       sources(first: $first, after: $after) {
@@ -165,7 +165,7 @@ query Environment($environmentId: Int!, $first: Int!, $after: String) {
 """
 
 QUERY_SINGLE_SOURCE = """
-query single_source($environmentId: Int!, $uniqueIds: [String!]) {
+query single_source($environmentId: BigInt!, $uniqueIds: [String!]) {
   environment(id: $environmentId) {
     definition {
       sources(first: 1, filter: { uniqueIds: $uniqueIds }) {
