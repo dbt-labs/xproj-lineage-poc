@@ -91,7 +91,7 @@ class ModelingRuleSet:
                     "short_summary":f"{source.name} is not used.",
                     "long_summary":f"""{source.name} is not used.
                        This represents either a source that you have defined in YML but never brought into a model or a model that was deprecated and the corresponding rows in the source block of the YML file were not deleted at the same time. This simply represents the buildup of cruft in the project that doesn’t need to be there.""",
-                    "model":source.name,
+                    "model": source.sourceName + "." +  source.name,
                     "unique_id":source.uniqueId,
                     "severity":"medium",
                     "rule_set":"DAG Structure",
@@ -108,7 +108,7 @@ class ModelingRuleSet:
                     "short_summary":f"{source.name} is the direct parent of multiple resources in the DAG.",
                     "long_summary":f"""{source.name} is the direct parent of multiple resources in the DAG.
                        Each source node should be referenced by a single model that performs basic operations, such as renaming, recasting, and other light transformations to maintain consistency through out the project.""",
-                    "model":source.name,
+                    "model":source.sourceName + "." +  source.name,
                     "unique_id":source.uniqueId,
                     "severity":"medium",
                     "rule_set":"DAG Structure",

@@ -7,6 +7,7 @@ from schemas.eval_utils import EvaluatorViolation
 import plotly.express as px
 import pandas as pd
 import streamlit as st
+from utils.get_eval_data import show_resource_violations
 from utils.set_variables import check_variables
 
 check_variables()
@@ -51,7 +52,7 @@ def get_violations_by_rule_set(violations: List[EvaluatorViolation]):
     df.columns = ["Rule Category", "Total Count"]
     return df
 
-def get_violations_by_model(violations: List[EvaluatorViolation]):
+def get_violations_by_resource(violations: List[EvaluatorViolation]):
     violation_map = {}
     for violation in violations:
         if violation.model not in violation_map.keys():
@@ -59,40 +60,44 @@ def get_violations_by_model(violations: List[EvaluatorViolation]):
         else:
             violation_map[violation.model] += 1
     df = pd.DataFrame.from_dict(violation_map, orient="index").reset_index()
-    df.columns = ["Model Name", "Total Count"]
+    df.columns = ["Resource", "Total Count"]
     return df
 
 severity_map = get_violations_by_severity(all_violations)
 rule_category_map = get_violations_by_rule_set(all_violations)
-model_map = get_violations_by_model(all_violations)
+resource_map = get_violations_by_resource(all_violations)
 severity_plot = px.bar(severity_map, y="Severity", x="Total Count", orientation='h', color="Severity")
 rule_set_plot = px.bar(rule_category_map, y="Rule Category", x="Total Count", orientation='h', color="Rule Category")
-model_plot = px.bar(model_map, y="Model Name", x="Total Count", orientation='h', color="Model Name")
+resource_plot = px.bar(resource_map, y="Resource", x="Total Count", orientation='h', color="Resource")
 grouper = st.selectbox(
         "View Violations by",
-        ("Severity", "Rule Category", "Model Name")
+        ("Severity", "Rule Category", "Resource")
     )
 if grouper == "Severity":
-    st.subheader("Violations by Severity")
+    st.subheader("Total Violations by Severity")
     st.plotly_chart(severity_plot)
-elif grouper == "Model Name":
-    st.subheader("Violations by Model Name")
-    st.plotly_chart(model_plot)
+    st.subheader("View Violations by Severity")
+    severity_levels = set([violation.severity.value for violation in all_violations])
+    severity = st.selectbox("Select a resource with a violation", severity_levels)
+    resource_violations = [violation for violation in all_violations if violation.severity == severity]
+    show_resource_violations(resource_violations)
+elif grouper == "Resource":
+    st.subheader("Total Violations by Resource")
+    st.plotly_chart(resource_plot)
+    st.subheader("View Violations by Resource")
+    violating_resources = set([violation.model for violation in all_violations])
+    model = st.selectbox("Select a resource with a violation", violating_resources)
+    resource_violations = [violation for violation in all_violations if violation.model == model]
+    show_resource_violations(resource_violations)
+
 elif grouper == "Rule Category":
-    st.subheader("Violations by Rule Category")
+    st.subheader("Total Violations by Rule Category")
     st.plotly_chart(rule_set_plot)
+    st.subheader("View Violations by Rule Category")
+    rule_sets = set([violation.rule_set for violation in all_violations])
+    rule_set = st.selectbox("Select a resource with a violation", rule_sets)
+    resource_violations = [violation for violation in all_violations if violation.rule_set == rule_set]
+    show_resource_violations(resource_violations)
 
+# st.write(severity_map)
 ## This is the section to look at a single resource and evaluate it
-st.subheader("Violations by Resource")
-violating_resources = set([violation.unique_id for violation in all_violations])
-unique_id = st.selectbox("Select a resource with a violation", violating_resources)
-
-resource_violations = [violation for violation in all_violations if violation.unique_id == unique_id]
-
-for violation in resource_violations:
-    with st.expander(str(violation)):
-        st.markdown(f"**{violation.short_summary}**")
-        st.markdown(f"**Severity**: {violation.severity}")
-        st.markdown(f"**Details**: \n\n{violation.long_summary}")
-        if violation.exceptions:
-            st.markdown(f"**Exceptions**: \n\n{violation.exceptions}")

@@ -141,6 +141,7 @@ query Environment($environmentId: BigInt!, $first: Int!, $after: String) {
               name
             }
             name
+            sourceName
             uniqueId
             database
             description
@@ -176,6 +177,7 @@ query single_source($environmentId: BigInt!, $uniqueIds: [String!]) {
               name
             }
             name
+            sourceName
             uniqueId
             database
             description

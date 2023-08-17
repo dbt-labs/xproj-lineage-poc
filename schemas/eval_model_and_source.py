@@ -30,6 +30,7 @@ class DiscoSourceNode(BaseModel):
     uniqueId: str
     description: str
     database: str
+    sourceName: str
     schema_: str = Field("", alias="schema")
     children: List[DiscoRelatedDAGNode]
     tests: List[DiscoRelatedTestNode]
