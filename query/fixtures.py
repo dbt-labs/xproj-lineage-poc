@@ -32,11 +32,6 @@ query Mesh($accountId: BigInt!){
       schema
       identifier
       runGeneratedAt
-      publicAncestors {
-        name
-        packageName
-        relationName
-      }
       children {
         dbtCoreProject
         projectId

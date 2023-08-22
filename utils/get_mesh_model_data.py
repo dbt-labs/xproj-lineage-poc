@@ -44,6 +44,8 @@ def get_model_xproj_dag(model_data: publicModelNode, mesh_data: DiscoResponse):
 
     # add model project-level children
     for child in model_data.children:
+        if child.dependentModelsCount == 0:
+            continue
         nodes.append(
             Node(
                 id=child.dbtCoreProject,
